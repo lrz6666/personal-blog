@@ -9,17 +9,19 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     ElAside: typeof import('element-plus/es')['ElAside']
-    ElCollapseTransition: typeof import('element-plus/es')['ElCollapseTransition']
+    ElBreadcrumb: typeof import('element-plus/es')['ElBreadcrumb']
+    ElBreadcrumbItem: typeof import('element-plus/es')['ElBreadcrumbItem']
     ElContainer: typeof import('element-plus/es')['ElContainer']
     ElHeader: typeof import('element-plus/es')['ElHeader']
     ElIcon: typeof import('element-plus/es')['ElIcon']
     ElMain: typeof import('element-plus/es')['ElMain']
     ElMenu: typeof import('element-plus/es')['ElMenu']
     ElMenuItem: typeof import('element-plus/es')['ElMenuItem']
-    ElMenuItemGroup: typeof import('element-plus/es')['ElMenuItemGroup']
-    ElScoller: typeof import('element-plus/es')['ElScoller']
-    ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
-    ElSubMenu: typeof import('element-plus/es')['ElSubMenu']
+    ElPageHeader: typeof import('element-plus/es')['ElPageHeader']
+    ElTabPane: typeof import('element-plus/es')['ElTabPane']
+    ElTabs: typeof import('element-plus/es')['ElTabs']
+    HeadNav: typeof import('./src/components/headNav/headNav.vue')['default']
+    MainContent: typeof import('./src/components/mainContent/mainContent.vue')['default']
     SideMenu: typeof import('./src/components/sideMenu/sideMenu.vue')['default']
   }
 }

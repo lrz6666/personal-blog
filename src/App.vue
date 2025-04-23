@@ -1,13 +1,12 @@
 <template>
-  <div class="common-layout ">
+  <div class="common-layout min-h-screen min-w-full">
     <el-container class="baseLayout">
-        <sideMenu/>
-      <el-container>
-        <el-header height="60px" style="background-color: yellow;">
-          
-        </el-header>
-        <el-main style="background-color: green;">Main</el-main>
+      <sideMenu />
+      <el-container class="flex flex-col">
+        <headNav ></headNav>
+        <mainContent ></mainContent>
       </el-container>
+      
     </el-container>
   </div>
 </template>
@@ -15,7 +14,8 @@
 
 <script setup lang="ts">
 import sideMenu from './components/sideMenu/sideMenu.vue';
-
+import headNav from './components/headNav/headNav.vue';
+import mainContent from './components/mainContent/mainContent.vue';
 </script>
 
 <style scoped>
