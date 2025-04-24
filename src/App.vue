@@ -1,10 +1,12 @@
 <template>
   <div class="common-layout min-h-screen min-w-full">
     <el-container class="baseLayout">
-      <sideMenu />
+      <SideMenu />
       <el-container class="flex flex-col">
-        <headNav ></headNav>
-        <mainContent ></mainContent>
+        <HeadNav ></HeadNav>
+        <MainContent >
+          <router-view/>
+        </MainContent>
       </el-container>
       
     </el-container>
@@ -13,9 +15,12 @@
 
 
 <script setup lang="ts">
-import sideMenu from './components/sideMenu/sideMenu.vue';
-import headNav from './components/headNav/headNav.vue';
-import mainContent from './components/mainContent/mainContent.vue';
+import SideMenu from './components/sideMenu/SideMenu.vue';
+import HeadNav from './components/headNav/HeadNav.vue';
+import MainContent from './components/mainContent/MainContent.vue';
+import { useRoute,useRouter } from 'vue-router'
+const router = useRouter()
+const route = useRoute()
 </script>
 
 <style scoped>

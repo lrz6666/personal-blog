@@ -1,85 +1,115 @@
 <template>
-    <div className="h-[95%] pt-[0.5rem] bg-gray-50 ">
-    <el-tabs
-    v-model="editableTabsValue"
-    type="card"
-    class="demo-tabs  h-full"
-    editable
-    @edit="handleTabsEdit"
-
-  >
-    <template #add-icon >
-      <el-icon ><Select /></el-icon>
-    </template>
-    <el-tab-pane
-      v-for="item in editableTabs"
-      :key="item.name"
-      :label="item.title"
-      :name="item.name"
-      class="p-5  demo-tabs bg-gray-300 h-full"
-    >
-      {{ item.content }}
-    </el-tab-pane>
-  </el-tabs>
+    <div className="h-[95%] bg-gray-300">
+        <el-tabs v-model="activeTab" type="card" closable active-class="active-tab" @tab-remove="removeTab"
+            @tab-click="handleTabClick">
+            <el-tab-pane v-for="tab in tabs" :key="tab.path" :label="tab.title" :name="tab.path">
+            </el-tab-pane>
+        </el-tabs>
+        <div>
+            <router-view />
+        </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
-import { Select } from '@element-plus/icons-vue'
-import type { TabPaneName } from 'element-plus'
+import { ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
-let tabIndex = 2
-const editableTabsValue = ref('2')
-const editableTabs = ref([
-  {
-    title: 'Tab 1',
-    name: '1',
-    content: 'Tab 1 content',
-  },
-  {
-    title: 'Tab 2',
-    name: '2',
-    content: 'Tab 2 content',
-  },
+const route = useRoute()
+const router = useRouter()
+
+// 标签页数据
+const tabs = ref([
+    { title: '首页', path: '/' }
 ])
 
-const handleTabsEdit = (
-  targetName: TabPaneName | undefined,
-  action: 'remove' | 'add'
-) => {
-  if (action === 'add') {
-    const newTabName = `${++tabIndex}`
-    editableTabs.value.push({
-      title: 'New Tab',
-      name: newTabName,
-      content: 'New Tab content',
-    })
-    editableTabsValue.value = newTabName
-  } else if (action === 'remove') {
-    const tabs = editableTabs.value
-    let activeName = editableTabsValue.value
-    if (activeName === targetName) {
-      tabs.forEach((tab, index) => {
-        if (tab.name === targetName) {
-          const nextTab = tabs[index + 1] || tabs[index - 1]
-          if (nextTab) {
-            activeName = nextTab.name
-          }
-        }
-      })
-    }
+// 当前激活的标签页
+const activeTab = ref('/')
 
-    editableTabsValue.value = activeName
-    editableTabs.value = tabs.filter((tab) => tab.name !== targetName)
-  }
+// 监听路由变化，添加新标签页
+watch(() => route.path, (newPath) => {
+    if (!tabs.value.some(tab => tab.path === newPath)) {
+        tabs.value.push({
+            title: route.meta.title || '未命名',
+            path: newPath
+        })
+    }
+    activeTab.value = newPath
+}, { immediate: true })
+
+// 点击标签页切换路由
+const handleTabClick = (tab) => {
+    router.push(tab.props.name)
+}
+
+// 关闭标签页
+const removeTab = (targetPath) => {
+    const index = tabs.value.findIndex(tab => tab.path === targetPath)
+    tabs.value.splice(index, 1)
+
+    // 如果关闭的是当前激活的标签页，跳转到前一个标签页
+    if (targetPath === activeTab.value) {
+        const lastTab = tabs.value[tabs.value.length - 1]
+        router.push(lastTab?.path || '/')
+    }
 }
 </script>
 
 <style>
-.demo-tabs > .el-tabs__content {
-  color: #6b778c;
-  font-size: 32px;
-  font-weight: 600;
+/* 自定义标签页整体样式 */
+.el-tabs {
+    --el-tabs-header-height: 40px;
+    /* 调整标签栏高度 */
+}
+
+.el-tabs__nav {
+    border: 0px !important;
+}
+
+.el-tabs__nav-wrap {
+    margin-bottom: -4px !important;
+}
+
+/* 自定义标签项样式 */
+.el-tabs__item {
+    padding: 0 20px !important;
+    height: 36px !important;
+    line-height: 36px !important;
+    font-size: 14px;
+    transition: all 0.3s;
+}
+
+/* 激活标签样式 */
+.el-tabs__item.is-active {
+    color: #1890ff;
+    background-color: #f0f7ff;
+    border-bottom-color: #1890ff !important;
+}
+
+/* 悬停效果 */
+.el-tabs__item:hover {
+    color: #1890ff;
+}
+
+/* 关闭按钮样式 */
+.el-tabs__item .el-icon-close {
+    width: 14px;
+    height: 14px;
+    margin-left: 4px;
+}
+
+/* 自定义卡片式标签样式 */
+.el-tabs--card>.el-tabs__header .el-tabs__item {
+    border: 1px solid #e6e6e6;
+    border-radius: 4px 4px 0 0;
+    margin-right: 4px;
+    background: #f5f5f5;
+}
+
+.el-tabs--card>.el-tabs__header .el-tabs__item.is-active {
+    background: #fff;
+    border-radius: 2px;
+    border-bottom-color: #1890ff !important;
+
 }
 </style>

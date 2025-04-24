@@ -20,8 +20,10 @@ declare module 'vue' {
     ElPageHeader: typeof import('element-plus/es')['ElPageHeader']
     ElTabPane: typeof import('element-plus/es')['ElTabPane']
     ElTabs: typeof import('element-plus/es')['ElTabs']
-    HeadNav: typeof import('./src/components/headNav/headNav.vue')['default']
-    MainContent: typeof import('./src/components/mainContent/mainContent.vue')['default']
-    SideMenu: typeof import('./src/components/sideMenu/sideMenu.vue')['default']
+    HeadNav: typeof import('./src/components/headNav/HeadNav.vue')['default']
+    MainContent: typeof import('./src/components/mainContent/MainContent.vue')['default']
+    RouterLink: typeof import('vue-router')['RouterLink']
+    RouterView: typeof import('vue-router')['RouterView']
+    SideMenu: typeof import('./src/components/sideMenu/SideMenu.vue')['default']
   }
 }
