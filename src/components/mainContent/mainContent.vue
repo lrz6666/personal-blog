@@ -1,12 +1,12 @@
 <template>
-    <div className="h-[95%] bg-gray-300">
-        <el-tabs v-model="activeTab" type="card" closable active-class="active-tab" @tab-remove="removeTab"
-            @tab-click="handleTabClick">
+    <div className="h-[95%] flex flex-col">
+        <el-tabs v-model="activeTab" type="card" editable class="hide-add-button" @tab-remove="removeTab" @tab-click="handleTabClick">
             <el-tab-pane v-for="tab in tabs" :key="tab.path" :label="tab.title" :name="tab.path">
             </el-tab-pane>
         </el-tabs>
-        <div>
-            <router-view />
+        <div className=" p-[1rem] flex-1 bg-gray-100">
+                <router-view />
+
         </div>
     </div>
 </template>
@@ -14,7 +14,15 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-
+interface Tab {
+    props: {
+        name: string       // 路由路径
+        label: string      // 显示标签
+        closable: boolean  // 是否可关闭
+        disabled: boolean  // 是否禁用
+        lazy: boolean      // 是否懒加载
+    }
+}
 const route = useRoute()
 const router = useRouter()
 
@@ -30,7 +38,7 @@ const activeTab = ref('/')
 watch(() => route.path, (newPath) => {
     if (!tabs.value.some(tab => tab.path === newPath)) {
         tabs.value.push({
-            title: route.meta.title || '未命名',
+            title: (route.meta.title as string) || '未命名',
             path: newPath
         })
     }
@@ -38,15 +46,14 @@ watch(() => route.path, (newPath) => {
 }, { immediate: true })
 
 // 点击标签页切换路由
-const handleTabClick = (tab) => {
+const handleTabClick = (tab: Tab) => {
     router.push(tab.props.name)
 }
 
 // 关闭标签页
-const removeTab = (targetPath) => {
+const removeTab = (targetPath: string) => {
     const index = tabs.value.findIndex(tab => tab.path === targetPath)
     tabs.value.splice(index, 1)
-
     // 如果关闭的是当前激活的标签页，跳转到前一个标签页
     if (targetPath === activeTab.value) {
         const lastTab = tabs.value[tabs.value.length - 1]
@@ -55,61 +62,14 @@ const removeTab = (targetPath) => {
 }
 </script>
 
-<style>
-/* 自定义标签页整体样式 */
-.el-tabs {
-    --el-tabs-header-height: 40px;
-    /* 调整标签栏高度 */
+<style scoped>
+.el-tabs{
+    background-color:white ;
 }
-
-.el-tabs__nav {
-    border: 0px !important;
+.hide-add-button :deep(.el-tabs__new-tab) {
+  display: none !important;
 }
-
-.el-tabs__nav-wrap {
-    margin-bottom: -4px !important;
-}
-
-/* 自定义标签项样式 */
-.el-tabs__item {
-    padding: 0 20px !important;
-    height: 36px !important;
-    line-height: 36px !important;
-    font-size: 14px;
-    transition: all 0.3s;
-}
-
-/* 激活标签样式 */
-.el-tabs__item.is-active {
-    color: #1890ff;
-    background-color: #f0f7ff;
-    border-bottom-color: #1890ff !important;
-}
-
-/* 悬停效果 */
-.el-tabs__item:hover {
-    color: #1890ff;
-}
-
-/* 关闭按钮样式 */
-.el-tabs__item .el-icon-close {
-    width: 14px;
-    height: 14px;
-    margin-left: 4px;
-}
-
-/* 自定义卡片式标签样式 */
-.el-tabs--card>.el-tabs__header .el-tabs__item {
-    border: 1px solid #e6e6e6;
-    border-radius: 4px 4px 0 0;
-    margin-right: 4px;
-    background: #f5f5f5;
-}
-
-.el-tabs--card>.el-tabs__header .el-tabs__item.is-active {
-    background: #fff;
-    border-radius: 2px;
-    border-bottom-color: #1890ff !important;
-
+:deep(.el-tabs__header) {
+    margin: 0 !important;
 }
 </style>
