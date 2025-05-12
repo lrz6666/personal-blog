@@ -34,7 +34,7 @@ declare module 'vue' {
     ElTabs: typeof import('element-plus/es')['ElTabs']
     HeadNav: typeof import('./src/components/headNav/HeadNav.vue')['default']
     MainContent: typeof import('./src/components/mainContent/MainContent.vue')['default']
-    NewBlogForm: typeof import('./src/components/mainContent/newBlogForm.vue/NewBlogForm.vue')['default']
+    NewBlogForm: typeof import('./src/components/mainContent/NewBlogForm.vue/NewBlogForm.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SideMenu: typeof import('./src/components/sideMenu/SideMenu.vue')['default']
