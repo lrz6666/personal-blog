@@ -1,14 +1,16 @@
 <template>
-  <div class="common-layout min-h-screen min-w-full">
+  <router-view v-if="route.path === '/login'" />
+
+  <!-- 其他页面，渲染完整布局 -->
+  <div v-else class="common-layout min-h-screen min-w-full">
     <el-container class="baseLayout">
       <SideMenu />
       <el-container class="flex flex-col">
-        <HeadNav ></HeadNav>
-        <MainContent >
-          <router-view/>
+        <HeadNav />
+        <MainContent>
+          <router-view />
         </MainContent>
       </el-container>
-      
     </el-container>
   </div>
 </template>
@@ -18,6 +20,7 @@
 import SideMenu from './components/sideMenu/SideMenu.vue';
 import HeadNav from './components/headNav/HeadNav.vue';
 import MainContent from './components/mainContent/MainContent.vue';
+import LoginView from './views/LoginView.vue';
 import { useRoute,useRouter } from 'vue-router'
 const router = useRouter()
 const route = useRoute()
