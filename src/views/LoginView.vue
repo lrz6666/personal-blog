@@ -1,19 +1,19 @@
 <template>
   <div class="flex justify-center items-center h-screen bg-gray-200">
     <div class=" bg-white p-[2rem] rounded-lg">
-      <el-form ref="ruleFormRef" style="max-width: 600px" :model="ruleForm" status-icon :rules="rules"
-        label-width="auto" class="demo-ruleForm">
+      <el-form ref="fromDataRef" style="max-width: 600px" :model="fromData" status-icon :rules="rules"
+        label-width="auto" class="demo-fromData">
         <h1 class=" text-[1.6rem]">登录</h1>
         <el-form-item prop="phone">
           <p>电话</p>
-          <el-input v-model="ruleForm.phone" autocomplete="off" />
+          <el-input v-model="fromData.phone" autocomplete="off" />
         </el-form-item>
         <el-form-item prop="password">
           <p>密码</p>
-          <el-input v-model="ruleForm.password" type="password" autocomplete="off" />
+          <el-input v-model="fromData.password" type="password" autocomplete="off" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm(ruleFormRef)">
+          <el-button type="primary" :loading="isLoading" @click="submitForm(fromDataRef)">
             Submit
           </el-button>
         </el-form-item>
@@ -27,9 +27,12 @@ import { reactive, ref } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
-const ruleFormRef = ref<FormInstance>()
+import { login } from '@/api/users'
 
-
+//是否登录加载中
+const isLoading = ref(false)
+//定义表单内容ref
+const fromDataRef = ref<FormInstance>()
 //用户测试数据
 const userData = [
   {
@@ -54,23 +57,15 @@ const userData = [
     role: 'admin3'
   },
 ]
-const validatePass = (rule: any, value: any, callback: any) => {
-  if (value === '') {
-    callback(new Error('Please input the password'))
-  } else {
-
-    callback()
-  }
-}
-//定义rulefrom格式
+//定义fromDataRef格式
 interface LoginForm {
   phone: string  // 允许为 null 或 number
   password: string;
 }
-//定义
-const ruleForm = reactive<LoginForm>({
-  phone: '',
-  password: '',
+//定义表单数据
+const fromData = reactive<LoginForm>({
+  phone: '15138667320',
+  password: 'l123456',
 });
 //使用路由
 const router = useRouter()
@@ -97,8 +92,8 @@ const validatePassword = (rule: any, value: string, callback: Function) => {
     callback();
   }
 };
-
-const rules = reactive<FormRules<typeof ruleForm>>({
+//表单规则
+const rules = reactive<FormRules<typeof fromData>>({
   phone: [
     { required: true, validator: validatePhone, trigger: 'blur' }
   ],
@@ -106,27 +101,37 @@ const rules = reactive<FormRules<typeof ruleForm>>({
     { required: true, validator: validatePassword, trigger: 'blur' }
   ],
 });
-
+//提交表单事件
 const submitForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return
-
+  isLoading.value = true
   try {
     const user = userData.find(
-      u => u.phone === ruleForm.phone && u.password === ruleForm.password
+      u => u.phone === fromData.phone && u.password === fromData.password
     )
     console.log(user)
     if (user) {
+      //提交登录请求
+      login(fromData).then(res => {
+        console.log(res)
+      })
       ElMessage.success(`登录成功！欢迎 ${user.userName}`);
-      router.push('/')
+      // router.push('/')
+      isLoading.value = false
     } else {
       ElMessage.error('手机号或密码错误');
+      isLoading.value = false
     }
   } catch (error) {
     console.error('登录失败:', error);
+    setTimeout(() => {
+      isLoading.value = false
+      console.log('finish')
+
+    }, 1000);
   }
+
 }
-
-
 
 </script>
 

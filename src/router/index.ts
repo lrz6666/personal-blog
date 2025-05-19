@@ -6,14 +6,14 @@ import component from "element-plus/es/components/tree-select/src/tree-select-op
 import LoginView from "@/views/LoginView.vue";
 
 const routes = [
-    { path: '/login', component: LoginView },
+    { path: '/login', name:'Login',component: LoginView, meta:{ requiresAuth: false}},
     { 
         path: '/', 
         component: HomeView,
-        meta: { title: '首页' },
+        meta: { title: '首页',requiresAuth: true },
         children: [
-            { path: 'userMange', component: UserManageView, meta: { title: '用户管理页' } },
-            { path: 'blogMange', component: BlogManageView, meta: { title: '博客管理页' } },
+            { path: 'userMange',name:'UserMange', component: UserManageView, meta: { title: '用户管理页' } },
+            { path: 'blogMange',name:'BlogMange', component: BlogManageView, meta: { title: '博客管理页' } },
         ] 
     },
 ]

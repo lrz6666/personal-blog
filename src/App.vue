@@ -1,6 +1,5 @@
 <template>
   <router-view v-if="route.path === '/login'" />
-
   <!-- 其他页面，渲染完整布局 -->
   <div v-else class="common-layout min-h-screen min-w-full">
     <el-container class="baseLayout">
@@ -17,6 +16,7 @@
 
 
 <script setup lang="ts">
+import { onMounted } from 'vue';
 import SideMenu from './components/sideMenu/SideMenu.vue';
 import HeadNav from './components/headNav/HeadNav.vue';
 import MainContent from './components/mainContent/MainContent.vue';
@@ -24,6 +24,12 @@ import LoginView from './views/LoginView.vue';
 import { useRoute,useRouter } from 'vue-router'
 const router = useRouter()
 const route = useRoute()
+onMounted(() => {
+  // 首次加载时检查是否在登录页
+  if (window.location.pathname !== '/login') {
+    router.replace('/login');
+  }
+});
 </script>
 
 <style scoped>
