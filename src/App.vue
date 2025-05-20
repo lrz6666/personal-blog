@@ -21,13 +21,36 @@ import SideMenu from './components/sideMenu/SideMenu.vue';
 import HeadNav from './components/headNav/HeadNav.vue';
 import MainContent from './components/mainContent/MainContent.vue';
 import LoginView from './views/LoginView.vue';
-import { useRoute,useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
+import { verifyToken } from './api/users';
 const router = useRouter()
 const route = useRoute()
+const accessToken = localStorage.getItem("access_token");
+
 onMounted(() => {
   // 首次加载时检查是否在登录页
-  if (window.location.pathname !== '/login') {
+  // if (window.location.pathname !== '/login') {
+  //   router.replace('/login');
+  // }
+
+  if (accessToken) {
+    verifyToken({ accessToken })
+      .then(response => {
+        if (response.data.success) {
+          // console.log("Token 有效:", response.data.message);
+        } else {
+          // console.error("Token 无效:", response.data.message);
+          router.replace('/login');
+          // 处理无效 Token，比如跳转到登录页
+        }
+      })
+      .catch(error => {
+        router.replace('/login');
+        // console.error("请求错误:", error);
+      });
+  } else {
     router.replace('/login');
+    // console.error("没有找到 access_token，请重新登录");
   }
 });
 </script>

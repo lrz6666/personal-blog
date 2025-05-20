@@ -106,29 +106,30 @@ const submitForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return
   isLoading.value = true
   try {
-    const user = userData.find(
-      u => u.phone === fromData.phone && u.password === fromData.password
-    )
-    console.log(user)
-    if (user) {
-      //提交登录请求
-      login(fromData).then(res => {
-        console.log(res)
-      })
-      ElMessage.success(`登录成功！欢迎 ${user.userName}`);
-      // router.push('/')
-      isLoading.value = false
-    } else {
-      ElMessage.error('手机号或密码错误');
-      isLoading.value = false
-    }
+    //提交登录请求
+    login(fromData).then(res => {
+      console.log(res)
+      if (res.data.success === true) {
+        ElMessage.success(`登录成功！欢迎 ${res.data.userName}`);
+        router.push('/')
+        isLoading.value = false
+        //存储访问令牌到localStorage
+        localStorage.setItem('access_token', res.data.content.access_token);
+      }
+      if (res.data.success === false) {
+        ElMessage.error('手机号或密码错误');
+        isLoading.value = false
+      }
+    }).catch((error) => {
+      console.error('登录失败:', error);
+      ElMessage.error('登录失败，请重试');
+    })
+    .finally(() => {
+      isLoading.value = false; // 无论成功或失败，都会执行
+    })
   } catch (error) {
     console.error('登录失败:', error);
-    setTimeout(() => {
-      isLoading.value = false
-      console.log('finish')
-
-    }, 1000);
+    isLoading.value = false
   }
 
 }
